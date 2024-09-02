@@ -67,25 +67,23 @@ struct Block2DMRGSolverImpl {
         : is_spin_adapted_(is_spin_adapted), scratch_(scratch), stack_mem_(stack_mem) {
         if (is_spin_adapted_)
             driver_su2_ =
-                std::make_shared<block2::DMRGDriver<block2::SU2, double>>(stack_mem, scratch);
+                std::make_shared<block2::DMRGDriver<block2::SU2, double>>(stack_mem, scratch, "", -1, true, 0.4, true);
         else
             driver_sz_ =
-                std::make_shared<block2::DMRGDriver<block2::SZ, double>>(stack_mem, scratch);
+                std::make_shared<block2::DMRGDriver<block2::SZ, double>>(stack_mem, scratch, "", -1, true, 0.4, true);
     }
     void reset_stack_memory(size_t stack_mem) {
         stack_mem_ = stack_mem;
         if (is_spin_adapted_) {
             // this line should not be deleted
             driver_su2_ = nullptr;
-            block2::frame_<double>() = nullptr;
             driver_su2_ =
-                std::make_shared<block2::DMRGDriver<block2::SU2, double>>(stack_mem, scratch_);
+                std::make_shared<block2::DMRGDriver<block2::SU2, double>>(stack_mem, scratch_, "", -1, true, 0.4, true);
         } else {
             // this line should not be deleted
             driver_sz_ = nullptr;
-            block2::frame_<double>() = nullptr;
             driver_sz_ =
-                std::make_shared<block2::DMRGDriver<block2::SZ, double>>(stack_mem, scratch_);
+                std::make_shared<block2::DMRGDriver<block2::SZ, double>>(stack_mem, scratch_, "", -1, true, 0.4, true);
         }
     }
     void initialize_system(int n_sites, int n_elec, int spin, int pg_irrep,
