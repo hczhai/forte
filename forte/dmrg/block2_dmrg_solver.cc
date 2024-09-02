@@ -267,12 +267,9 @@ double Block2DMRGSolver::compute_energy() {
     }
 
     timer t("BLOCK2 Solver Compute Energy");
-
-    // reset stack memory
+\
     // size_t stack_mem =
-    //     static_cast<size_t>(dmrg_options_->get_double("BLOCK2_STACK_MEM") * 1024 * 1024 * 1024);
-    // std::cout << "!!! " << dmrg_options_->get_double("BLOCK2_STACK_MEM") << " " << stack_mem << std::endl; 
-    // impl_->reset_stack_memory(stack_mem);
+    //     static_cast<size_t>(dmrg_options_->get_double("BLOCK2_STACK_MEM") * 1024 * 1024 * 1024);\
 
     // system initialization
     bool singlet_embedding = dmrg_options_->get_bool("BLOCK2_SINGLET_EMBEDDING");
@@ -420,7 +417,7 @@ double Block2DMRGSolver::compute_energy() {
         psi::outfile->Printf("\n    Initial guess  = %10s", (read_initial_guess ? "load" : "new"));
         psi::outfile->Printf("\n    Verbosity      = %10d", dmrg_verbose);
         psi::outfile->Printf("\n    Stack memory   = %10s",
-                             block2::Parsing::to_size_string(stack_mem).c_str());
+                             block2::Parsing::to_size_string(impl_->stack_mem_).c_str());
         psi::outfile->Printf("\n    Scratch        = " + impl_->scratch_);
         psi::outfile->Printf("\n");
     }
