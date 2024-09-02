@@ -77,11 +77,13 @@ struct Block2DMRGSolverImpl {
         if (is_spin_adapted_) {
             // this line should not be deleted
             driver_su2_ = nullptr;
+            block2::frame_<double>() = nullptr;
             driver_su2_ =
                 std::make_shared<block2::DMRGDriver<block2::SU2, double>>(stack_mem, scratch_);
         } else {
             // this line should not be deleted
             driver_sz_ = nullptr;
+            block2::frame_<double>() = nullptr;
             driver_sz_ =
                 std::make_shared<block2::DMRGDriver<block2::SZ, double>>(stack_mem, scratch_);
         }
