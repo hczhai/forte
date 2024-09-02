@@ -124,6 +124,7 @@ jobs:
         cmake .. -DBUILD_CLIB=ON \
           -DLARGE_BOND=ON \
           -DMPI=OFF \
+          -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_INSTALL_PREFIX=${HOME}/block2-bin
         make -j4 install
 
