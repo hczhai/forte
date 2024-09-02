@@ -67,10 +67,10 @@ struct Block2DMRGSolverImpl {
         : is_spin_adapted_(is_spin_adapted), scratch_(scratch), stack_mem_(stack_mem) {
         if (is_spin_adapted_)
             driver_su2_ =
-                std::make_shared<block2::DMRGDriver<block2::SU2, double>>(stack_mem, scratch, "", -1, true, 0.4, true);
+                std::make_shared<block2::DMRGDriver<block2::SU2, double>>(stack_mem, scratch);
         else
             driver_sz_ =
-                std::make_shared<block2::DMRGDriver<block2::SZ, double>>(stack_mem, scratch, "", -1, true, 0.4, true);
+                std::make_shared<block2::DMRGDriver<block2::SZ, double>>(stack_mem, scratch);
     }
     void reset_stack_memory(size_t stack_mem) {
         stack_mem_ = stack_mem;
@@ -236,7 +236,9 @@ Block2DMRGSolver::Block2DMRGSolver(StateInfo state, size_t nroot, std::shared_pt
                           std::to_string(getpid()) + ".block2." +
                           psi::Process::environment.molecule()->name();
     Block2ScratchManager::manager().scratch_folders.insert(scratch);
-    impl_ = make_shared<Block2DMRGSolverImpl>(is_spin_adapted, 1024LL, scratch);
+    size_t stack_mem =
+        static_cast<size_t>(options_->get_double("BLOCK2_STACK_MEM") * 1024 * 1024 * 1024);
+    impl_ = make_shared<Block2DMRGSolverImpl>(is_spin_adapted, stack_mem, scratch);
     na_ = state.na() - mo_space_info->size("INACTIVE_DOCC");
     nb_ = state.nb() - mo_space_info->size("INACTIVE_DOCC");
     maxiter_ = options_->get_int("BLOCK2_N_TOTAL_SWEEPS");
@@ -267,10 +269,10 @@ double Block2DMRGSolver::compute_energy() {
     timer t("BLOCK2 Solver Compute Energy");
 
     // reset stack memory
-    size_t stack_mem =
-        static_cast<size_t>(dmrg_options_->get_double("BLOCK2_STACK_MEM") * 1024 * 1024 * 1024);
-    std::cout << "!!! " << dmrg_options_->get_double("BLOCK2_STACK_MEM") << " " << stack_mem << std::endl; 
-    impl_->reset_stack_memory(stack_mem);
+    // size_t stack_mem =
+    //     static_cast<size_t>(dmrg_options_->get_double("BLOCK2_STACK_MEM") * 1024 * 1024 * 1024);
+    // std::cout << "!!! " << dmrg_options_->get_double("BLOCK2_STACK_MEM") << " " << stack_mem << std::endl; 
+    // impl_->reset_stack_memory(stack_mem);
 
     // system initialization
     bool singlet_embedding = dmrg_options_->get_bool("BLOCK2_SINGLET_EMBEDDING");
@@ -517,9 +519,9 @@ Block2DMRGSolver::transition_rdms(const std::vector<std::pair<size_t, size_t>>& 
         return std::vector<std::shared_ptr<RDMs>>(root_list.size());
 
     // reset stack memory
-    size_t stack_mem =
-        static_cast<size_t>(dmrg_options_->get_double("BLOCK2_STACK_MEM") * 1024 * 1024 * 1024);
-    impl_->reset_stack_memory(stack_mem);
+    // size_t stack_mem =
+    //     static_cast<size_t>(dmrg_options_->get_double("BLOCK2_STACK_MEM") * 1024 * 1024 * 1024);
+    // impl_->reset_stack_memory(stack_mem);
 
     // system initialization
     bool singlet_embedding = dmrg_options_->get_bool("BLOCK2_SINGLET_EMBEDDING");
@@ -761,9 +763,9 @@ Block2DMRGSolver::compute_complementary_H2caa_overlap(const std::vector<size_t>&
     const std::vector<size_t> tstride{nactv * nactv, 1, nactv};
 
     // reset stack memory
-    auto stack_mem =
-        static_cast<size_t>(dmrg_options_->get_double("BLOCK2_STACK_MEM") * 1024 * 1024 * 1024);
-    impl_->reset_stack_memory(stack_mem);
+    // auto stack_mem =
+    //     static_cast<size_t>(dmrg_options_->get_double("BLOCK2_STACK_MEM") * 1024 * 1024 * 1024);
+    // impl_->reset_stack_memory(stack_mem);
 
     // system initialization
     bool singlet_embedding = dmrg_options_->get_bool("BLOCK2_SINGLET_EMBEDDING");
