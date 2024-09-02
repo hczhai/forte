@@ -272,8 +272,6 @@ double Block2DMRGSolver::compute_energy() {
     std::cout << "!!! " << dmrg_options_->get_double("BLOCK2_STACK_MEM") << " " << stack_mem << std::endl; 
     impl_->reset_stack_memory(stack_mem);
 
-    std::cout << *block2::frame_<double>() << std::endl;
-
     // system initialization
     bool singlet_embedding = dmrg_options_->get_bool("BLOCK2_SINGLET_EMBEDDING");
     std::vector<int> actv_irreps = mo_space_info_->symmetry("ACTIVE");
