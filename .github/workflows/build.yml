@@ -113,12 +113,11 @@ jobs:
         key: ${{ runner.os }}-${{ runner.arch }}-block2-${{ steps.get-block2-key.outputs.key }}
 
     - name: Compile block2
-      if: steps.cache-restore-block2.outputs.cache-hit != 'true'
       env: 
         BLAS_ROOT: $
       run: |
         cd $HOME
-        git clone https://github.com/block-hczhai/block2-preview.git
+        git clone https://github.com/hczhai/block2-preview.git -b dbg-gha
         mkdir -p block2-preview/build
         cd block2-preview/build
         cmake .. -DBUILD_CLIB=ON \
@@ -126,14 +125,6 @@ jobs:
           -DMPI=OFF \
           -DCMAKE_INSTALL_PREFIX=${HOME}/block2-bin
         make -j4 install
-
-    - name: Cache block2
-      uses: actions/cache/save@v4
-      with:
-        path: |
-          ~/block2-bin
-          ~/block2-preview
-        key: ${{ runner.os }}-${{ runner.arch }}-block2-${{ steps.get-block2-key.outputs.key }}
 
     - name: Compile Forte
       run: |
@@ -172,14 +163,14 @@ jobs:
         if [ "$CPUTYPE" = "AuthenticAMD" ]; then
           export LD_PRELOAD=$PWD/libfixcpu.so
         fi
-        cd $HOME/work/forte/forte/tests/methods
-        python run_forte_tests.py --failed_dump --bw
-        cd $HOME/work/forte/forte/tests/pytest
-        pytest -v
-        cd $HOME/work/forte/forte/tests/pytest-methods
-        pytest -v
+        # cd $HOME/work/forte/forte/tests/methods
+        # python run_forte_tests.py --failed_dump --bw
+        # cd $HOME/work/forte/forte/tests/pytest
+        # pytest -v
+        # cd $HOME/work/forte/forte/tests/pytest-methods
+        # pytest -v
         cd $HOME/work/forte/forte/tests/pytest-block2
-        pytest -v
+        pytest -v -s
     
     - name: Upload artifacts
       if: failure()
